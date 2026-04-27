@@ -1,0 +1,196 @@
+Build an app where users can:
+
+create and manage customers
+create and manage products
+create and manage orders
+track payments
+view sales reports
+
+This is a strong learning project because it naturally uses CRUD, references, embedding, indexes, and aggregation.
+Suggested collections
+1. customers
+Store customer profile data.
+
+_id
+name
+email
+phone
+addresses (embedded array)
+
+2. products
+Store product catalog.
+
+_id
+name
+category
+price
+stock
+supplierId (reference if you add suppliers)
+
+3. orders
+Main transaction collection.
+
+_id
+customerId (reference to customers)
+items (embedded array of ordered products)
+
+productId
+productName
+quantity
+unitPrice
+
+
+status
+orderDate
+shippingAddress (embedded snapshot)
+totalAmount
+
+4. payments
+Store payment details separately.
+
+_id
+orderId (reference to orders)
+method
+paidAmount
+paymentDate
+status
+
+Why this design works
+Use embedding where data belongs tightly to the parent and should be read together:
+
+customer addresses inside customers
+order items inside orders
+shipping address snapshot inside orders
+
+Use references where data is shared or grows independently:
+
+orders.customerId
+payments.orderId
+items.productId
+
+That gives you both major MongoDB patterns in one app.
+CRUD features to build
+Customer CRUD
+
+create customer
+update phone/email/address
+view customer profile
+delete customer if no active orders
+
+Product CRUD
+
+add product
+update price/stock/category
+view product list
+delete inactive product
+
+Order CRUD
+
+create order for a customer
+add/remove items
+update status: Pending, Paid, Shipped, Delivered, Cancelled
+view order details
+cancel order
+
+Payment CRUD
+
+record payment
+update payment status
+view payments by order
+refund or mark failed payment
+
+MongoDB concepts you will practice
+1. References
+Use customerId, orderId, and productId to connect collections.
+2. Embedding
+Store order items and addresses inside parent documents.
+3. Aggregation
+This use case is excellent for aggregation practice.
+Example reports:
+
+total sales by month
+total sales by city
+top 5 products sold
+revenue by category
+orders by status
+customer lifetime value
+unpaid orders report
+
+Common stages you’ll use:
+
+$match
+$lookup
+$unwind
+$group
+$project
+$sort
+$limit
+
+4. Indexes
+Add indexes on:
+
+customers.email
+products.category
+orders.customerId
+orders.orderDate
+orders.status
+payments.orderId
+
+5. Validation / schema discipline
+Even with MongoDB flexibility, define clear field rules in Java models and collection validation.
+Best aggregation examples for this project
+I’d include these 5:
+
+Monthly revenue
+Top-selling products
+Orders per status
+Customer order history with payment summary
+Sales by city
+
+These are realistic and show why MongoDB is useful beyond basic CRUD.
+Java app structure
+For Java, keep it simple:
+
+Spring Boot
+Spring Data MongoDB
+layers: Controller → Service → Repository
+DTOs for request/response
+separate models for Customer, Product, Order, Payment
+
+Good MVP scope
+If you want a manageable project, start with:
+
+Customer CRUD
+Product CRUD
+Order CRUD
+3 aggregation reports:
+
+sales by month
+top products
+orders by status
+
+
+
+That is enough to demonstrate real MongoDB capability without making the app too large.
+My recommendation
+Build Order Management + Sales Dashboard.
+It is the best balance of:
+
+easy to understand
+strong Java CRUD practice
+natural use of references
+meaningful aggregation use cases
+
+Next move: I can turn this into either:
+
+a full collection schema design, or
+a Java Spring Boot project structure with APIs.
+
+
+
+Design the MongoDB schema for this app
+Give Java Spring Boot API list for CRUD
+
+
+
+
